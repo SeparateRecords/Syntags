@@ -52,13 +52,8 @@ class Syntax(RawSentinel, metaclass=SyntaxMeta):
 
         # Must be first so it can be overridden by keyword args.
         # Most of the time, attr_dicts will be either 0 or 1 dict.
-        if not attr_dicts:
-            attr_d = {}
-        elif len(attr_dicts) == 1:
-            attr_d = attr_dicts[0]
-        else:
-            attr_d = reduce(lambda cum, cur: {**cum, **cur}, attr_dicts, {})
-        self.attrs.update(attr_d)
+        attr_dict = reduce(lambda cum, cur: {**cum, **cur}, attr_dicts, {})
+        self.attrs.update(attr_dict)
 
         # Use aliases and replace underscores with dashes so users rarely
         # need to use attr_dicts
