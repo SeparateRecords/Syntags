@@ -9,7 +9,7 @@
 [Features]: #features
 [Install]: #install
 [License]: #license
-[Docs]: https://github.com/SeparateRecords/Syntags/tree/master/docs/
+[Docs]: https://github.com/SeparateRecords/Syntags/wiki
 
 **Syntags** lets you generate HTML, XML, SVG, etc. by writing concise, _real_ Python code.
 
@@ -46,7 +46,7 @@ Check out the [Syntags styleguide][styleguide] for recommendations on how to mai
 
 [consistency]: https://www.python.org/dev/peps/pep-0008/#a-foolish-consistency-is-the-hobgoblin-of-little-minds
 
-[styleguide]: https://github.com/SeparateRecords/Syntags/tree/master/docs/styleguide.md
+[styleguide]: https://github.com/SeparateRecords/Syntags/wiki/Styleguide
 
 ## Features
 
