@@ -1,8 +1,13 @@
-import pytest
+"""Make sure get_component_build_method works right.
+
+It's a super critical piece of plumbing for @component, so it needs to work.
+"""
 
 from dataclasses import dataclass
 
-from syntags.lib.components import Component, component, get_component_build_method
+import pytest
+
+from syntags.lib.components import get_component_build_method
 
 
 class WasCalled(Exception):
