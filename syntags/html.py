@@ -32,7 +32,6 @@ __all__ = [
     "col",
     "colgroup",
     "command",
-    "comment",
     "data",
     "datalist",
     "dd",
@@ -288,9 +287,3 @@ class html(Element):
     _name = "html"
     _lhs_template = "<!DOCTYPE $name><$name>"
     _lhs_attr_template = "<!DOCTYPE $name><$name $attrs>"
-
-
-class comment(Element):
-    _lhs_template = "<!-- "
-    _lhs_attr_template = "<!-- "
-    _rhs_template = " -->"
