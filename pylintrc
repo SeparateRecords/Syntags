@@ -1,0 +1,26 @@
+[BASIC]
+function-naming-style = any
+
+
+[FORMAT]
+max-line-length = 88
+
+
+[TYPECHECK]
+signature-mutators =
+  component
+
+
+[MESSAGES CONTROL]
+disable =
+  bad-continuation,
+  bad-whitespace,
+  invalid-name,
+  missing-class-docstring,
+  missing-function-docstring,
+  no-self-argument,
+  protected-access,
+  too-few-public-methods,
+  import-outside-toplevel,
+  unused-wildcard-import,
+  unused-argument

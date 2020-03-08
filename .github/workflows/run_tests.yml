@@ -1,0 +1,41 @@
+name: Test Syntags
+
+on:
+  push:
+    paths:
+      - "**.py"
+      - "pyproject.toml"
+      - ".github/workflows/**.yml"
+
+jobs:
+  Testing:
+    name: Run tests
+
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python-version: [3.8]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Poetry
+        uses: dschep/install-poetry-action@v1.3
+        with:
+          create_virtualenvs: true
+
+      - name: Install package
+        run: poetry install
+
+      - name: Run pytest
+        run: poetry run python -m pytest tests/
