@@ -11,7 +11,7 @@ class MockComponent:
     attrs: dict
 
 
-def test_deco_creates_component_subclass():
+def test_creates_component_subclass():
     @component
     def example(**attrs):
         pass
@@ -19,7 +19,7 @@ def test_deco_creates_component_subclass():
     assert issubclass(example, Component)
 
 
-def test_deco_copies_metadata():
+def test_copies_metadata():
     def control():
         pass
 
@@ -32,7 +32,7 @@ def test_deco_copies_metadata():
     assert callable(example.build)
 
 
-def test_deco_laziness():
+def test_laziness():
     @component
     def example(**attrs):
         raise NotImplementedError
