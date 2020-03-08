@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from inspect import Parameter, signature
+import inspect
 from typing import Callable, Type, final
 
 from syntags.lib.syntax import Syntax, SyntaxMeta
-from syntags.lib.utils import render, make_repr, flatten
+from syntags.lib.utils import flatten, make_repr, render
 
 
 class ComponentMeta(SyntaxMeta):
@@ -28,30 +28,34 @@ class Component(Syntax, metaclass=ComponentMeta):
         return render(self.build())
 
     def build(self):
-        """Build a tree of nodes."""
+        """Make the component build some markup."""
         raise NotImplementedError("Component subclasses must implement build()")
 
 
 def get_component_build_method(builder: Callable) -> Callable:
-    """Get a build method based on the signature of the builder callable."""
-    params = signature(builder).parameters
+    """Get a valid build() method based on the signature of builder function."""
+    params = inspect.signature(builder).parameters
 
-    if params and next(iter(params.values())).kind == Parameter.POSITIONAL_ONLY:
-        # The first argument is positional-only, so that's now the children.
+    # If the first argument is positional-only, that should be the children.
+    # next() will raise StopIteration if params is empty, check first.
+    if params and next(iter(params.values())).kind == inspect.Parameter.POSITIONAL_ONLY:
+
         def build(self):
             kids = tuple(flatten(self.children))
             return builder(kids, **self.attrs)
 
+    # The "children" parameter is special if there's no positional-only
+    # params.
     elif "children" in params:
-        # The "children" argument is special if there's no positional-only
-        # parameters.
+
         def build(self):
             kids = tuple(flatten(self.children))
             return builder(children=kids, **self.attrs)
 
+    # None of the above exceptions are met, so call the builder with
+    # attributes as keyword arguments.
     else:
-        # None of the above exceptions are met, so call the builder with
-        # attributes as keyword arguments.
+
         def build(self):
             return builder(**self.attrs)
 
@@ -59,7 +63,7 @@ def get_component_build_method(builder: Callable) -> Callable:
 
 
 def component(builder: Callable) -> Type[Component]:
-    """Create a Component using the defined builder function."""
+    """Create a Component using the builder function."""
 
     # Use a generic name if builder is a lambda, otherwise use its name
     if builder.__name__ == "<lambda>":
