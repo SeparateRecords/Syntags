@@ -18,7 +18,10 @@ from syntags.lib.utils import RawStr, render
 
 @component
 def comment(children):
-    return RawStr(f"<!-- {render(children)} -->")
+    """Create a comment, escaping any end-sequences."""
+    rendered = render(children)
+    safe = rendered.replace('-->', '--&gt;')
+    return RawStr(f"<!-- {safe} -->")
 
 
 @component
