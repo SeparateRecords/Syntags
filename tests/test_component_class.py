@@ -5,14 +5,19 @@ import pytest
 from syntags.lib.components import Component
 
 
+class WasCalled(Exception):
+    pass
+
+
 def test_raises_if_not_overridden():
     with pytest.raises(NotImplementedError):
         Component().build()
 
 
-def test_renders_build_method():
+def test_str_calls_build_method():
     class ComponentTest(Component):
         def build(self):
-            return "test"
+            raise WasCalled
 
-    assert str(ComponentTest) == "test"
+    with pytest.raises(WasCalled):
+        str(ComponentTest)
