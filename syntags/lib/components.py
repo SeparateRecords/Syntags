@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import inspect
+from inspect import Parameter, signature
 from typing import Callable, Type, final
 
 from syntags.lib.syntax import Syntax, SyntaxMeta
@@ -34,9 +34,9 @@ class Component(Syntax, metaclass=ComponentMeta):
 
 def get_component_build_method(builder: Callable) -> Callable:
     """Get a build method based on the signature of the builder callable."""
-    params = inspect.signature(builder).parameters
+    params = signature(builder).parameters
 
-    if next(iter(params.values())).kind == inspect.Parameter.POSITIONAL_ONLY:
+    if params and next(iter(params.values())).kind == Parameter.POSITIONAL_ONLY:
         # The first argument is positional-only, so that's now the children.
         def build(self):
             kids = tuple(flatten(self.children))
