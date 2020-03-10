@@ -17,11 +17,14 @@ from syntags.lib.utils import RawStr, render
 # fmt: off
 
 @component
-def comment(children):
-    """Create a comment, escaping any end-sequences."""
+def comment(children, safe=False):
+    """Create a comment from the children.
+
+    The ``safe`` keyword will escape all end sequences (even from raw data).
+    """
     rendered = render(children)
-    safe = rendered.replace('-->', '--&gt;')
-    return RawStr(f"<!-- {safe} -->")
+    content = rendered if not safe else rendered.replace('-->', '--&gt;')
+    return RawStr(f"<!-- {content} -->")
 
 
 @component
