@@ -95,7 +95,7 @@ class Element(Syntax, metaclass=ElementMeta):
         """Render each child of this element."""
         return render(self.children)
 
-    def _collapse(self) -> str:
+    def __str__(self) -> str:
         """Collapse the element and all its children to a string."""
         lhs, rhs = self._render_self()
 

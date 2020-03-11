@@ -23,7 +23,7 @@ class Component(Syntax, metaclass=ComponentMeta):
         return make_repr(name, "element", children=kids, attrs=self.attrs)
 
     @final
-    def _collapse(self) -> str:
+    def __str__(self) -> str:
         """Build this component and render the resulting markup."""
         return render(self.build())
 

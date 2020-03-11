@@ -126,13 +126,9 @@ class Syntax(RawSentinel, metaclass=SyntaxMeta):
 
     # ——— Rendering logic ———
 
-    def _collapse(self) -> str:
-        """Create a human-friendly string representation."""
-        raise NotImplementedError("Syntax subclasses must implement _collapse()")
-
-    @final
     def __str__(self) -> str:
-        return self._collapse()
+        """Create a human-friendly string representation."""
+        raise NotImplementedError("Syntax subclasses must implement __str__()")
 
     # ——— Equality & Comparison ———
 

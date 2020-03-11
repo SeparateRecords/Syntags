@@ -63,7 +63,7 @@ def test_add_class():
     assert instance.attrs["class"] == {"example", "testing-this", "Caps"}
 
 
-def test_collapse():
+def test_str():
     instance = Syntax()
 
     with pytest.raises(NotImplementedError):
