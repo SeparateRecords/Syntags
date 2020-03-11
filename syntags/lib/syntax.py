@@ -51,14 +51,16 @@ class Syntax(RawSentinel, metaclass=SyntaxMeta):
         """Merge new attributes with any previously set, using a dict or keywords."""
 
         # Must be first so it can be overridden by keyword args.
-        attr_union = reduce(lambda cum, cur: {**cum, **cur}, attr_dicts, {})
-        self.attrs.update(attr_union)
+        # Most of the time, attr_dicts will be either 0 or 1 dict.
+        attr_dict = reduce(lambda cum, cur: {**cum, **cur}, attr_dicts, {})
+        self.attrs.update(attr_dict)
 
         # Use aliases and replace underscores with dashes so users rarely
-        # need to use attr_dict
-        for key, val in attrs.items():
-            safe_key = ATTR_ALIASES.get(key, key)
-            self.attrs[safe_key.replace("_", "-")] = val
+        # need to use attr_dicts
+        for key, value in attrs.items():
+            unaliased = ATTR_ALIASES.get(key, key)
+            dashed = unaliased.replace("_", "-")
+            self.attrs[dashed] = value
 
         return self
 
@@ -124,13 +126,9 @@ class Syntax(RawSentinel, metaclass=SyntaxMeta):
 
     # ——— Rendering logic ———
 
-    def _collapse(self) -> str:
-        """Create a human-friendly string representation."""
-        raise NotImplementedError("Syntax subclasses must implement _collapse()")
-
-    @final
     def __str__(self) -> str:
-        return self._collapse()
+        """Create a human-friendly string representation."""
+        raise NotImplementedError("Syntax subclasses must implement __str__()")
 
     # ——— Equality & Comparison ———
 

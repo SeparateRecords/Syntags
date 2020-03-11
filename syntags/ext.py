@@ -8,12 +8,23 @@ Components import their own dependencies. This avoids evaluating each namespace
 when this file is imported.
 """
 
-__all__ = ["css", "google_fonts", "xml_prolog", "rss_channel", "markdown"]
+__all__ = ["comment", "css", "google_fonts", "xml_prolog", "rss_channel", "markdown"]
 
 from syntags.lib.components import component
-from syntags.lib.utils import RawStr
+from syntags.lib.utils import RawStr, render
+
 
 # fmt: off
+
+@component
+def comment(children, safe=False):
+    """Create a comment from the children.
+
+    The ``safe`` keyword will escape all end sequences (even from raw data).
+    """
+    rendered = render(children)
+    content = rendered if not safe else rendered.replace('-->', '--&gt;')
+    return RawStr(f"<!-- {content} -->")
 
 
 @component

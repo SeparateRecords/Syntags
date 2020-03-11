@@ -17,6 +17,11 @@ def test_call_setting_attrs():
     assert instance.attrs == {"a": True, "b": True, "c": True}
 
 
+def test_multiple_dicts():
+    instance = Syntax({"a": 1, "b": 0}, {"a": 0}, {"c": 0})
+    assert instance.attrs == {"a": 0, "b": 0, "c": 0}
+
+
 def test_merging_attrs():
     instance = Syntax({"a": True, "b": False}, b=True, c=True)
     assert instance.attrs == {"a": True, "b": True, "c": True}
@@ -58,7 +63,7 @@ def test_add_class():
     assert instance.attrs["class"] == {"example", "testing-this", "Caps"}
 
 
-def test_collapse():
+def test_str():
     instance = Syntax()
 
     with pytest.raises(NotImplementedError):
