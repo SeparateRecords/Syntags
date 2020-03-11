@@ -41,10 +41,11 @@ __all__ = (
     "svg",
     "ext",
     # ~~ Raw API ~~ Exposes some of the inner workings of the API. For nerds.
+    "ATTR_ALIASES",
     "RawStr",
     "Component",
     "Element",
-    "ATTR_ALIASES",
+    "get_element_factory",
     # ~~ API ABCs ~~ For even bigger nerds.
     "RawSentinel",
     "Syntax",
@@ -52,12 +53,18 @@ __all__ = (
 )
 
 from syntags.lib.components import Component, component
-from syntags.lib.elements import Element, XMLElement, element, xml_element
+from syntags.lib.elements import (
+    Element,
+    XMLElement,
+    element,
+    get_element_factory,
+    xml_element,
+)
 from syntags.lib.syntax import Syntax, SyntaxMeta
 from syntags.lib.utils import (
     ATTR_ALIASES,
-    RawStr,
     RawSentinel,
+    RawStr,
     raw,
     render,
     render_to_file,

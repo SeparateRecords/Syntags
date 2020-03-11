@@ -8,12 +8,10 @@ from __future__ import annotations
 
 from functools import lru_cache
 from string import Template
-from typing import ClassVar, Optional, Tuple, TypeVar
+from typing import ClassVar, Optional, Tuple, Type
 
 from syntags.lib.syntax import Syntax, SyntaxMeta
 from syntags.lib.utils import make_repr, render, render_attrs
-
-T = TypeVar("T")
 
 
 class ElementMeta(SyntaxMeta):
@@ -26,7 +24,7 @@ class ElementMeta(SyntaxMeta):
 class Element(Syntax, metaclass=ElementMeta):
     """A Syntax type that can render itself."""
 
-    _name: str
+    _name: ClassVar[str] = "Element"
 
     # If there are no children, should the tag render as a void tag?
     _void_if_leaf: ClassVar[bool] = False
@@ -36,20 +34,6 @@ class Element(Syntax, metaclass=ElementMeta):
     _void_template: ClassVar[str] = "<$name>"
     _void_attr_template: ClassVar[str] = "<$name $attrs>"
     _rhs_template: ClassVar[str] = "</$name>"
-
-    @classmethod
-    @lru_cache(None)
-    def _new(cls: T, name: str, *, void: Optional[bool] = None) -> T:
-        """Create a subclass of this class using the given name."""
-
-        is_void = {} if void is None else {"_void_if_leaf": void}
-        cls_dict = {"_name": name, **is_void}
-        return type(name, (cls,), cls_dict)
-
-    @property
-    def _name(self) -> str:
-        """Get the name used in template substitution."""
-        return self.__class__.__name__
 
     def _render_lhs(self) -> str:
         """Render the left side of the tag, with attributes if present."""
@@ -117,6 +101,20 @@ class XMLElement(Element):
     _void_attr_template = "<$name $attrs />"
 
 
-element = Element._new
+# Always get the same factory function for the same type
+@lru_cache(None)
+def get_element_factory(elem):
+    """Get a function to generate subclasses of this class."""
 
-xml_element = XMLElement._new
+    @lru_cache(None)
+    def create_subclass(name: str, *, void: Optional[bool] = None) -> Type[Element]:
+        is_void = {} if void is None else {"_void_if_leaf": void}
+        cls_dict = {"_name": name, **is_void}
+        return type(name, (elem,), cls_dict)
+
+    return create_subclass
+
+
+element = get_element_factory(Element)
+
+xml_element = get_element_factory(XMLElement)
