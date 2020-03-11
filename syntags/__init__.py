@@ -22,7 +22,7 @@ https://github.com/SeparateRecords/Syntags
 #
 
 __title__ = "syntags"
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __author__ = "Robert Cooper <me@rob.ac>"
 __copyright__ = "Copyright 2020, Robert Cooper (SeparateRecords)"
 __license__ = "ISC"
