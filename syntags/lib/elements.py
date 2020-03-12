@@ -24,7 +24,7 @@ class ElementMeta(SyntaxMeta):
 class Element(Syntax, metaclass=ElementMeta):
     """A Syntax type that can render itself."""
 
-    _name: ClassVar[str] = "Element"
+    _name: ClassVar[str]
 
     # If there are no children, should the tag render as a void tag?
     _void_if_leaf: ClassVar[bool] = False
