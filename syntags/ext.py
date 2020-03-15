@@ -16,15 +16,61 @@ from syntags.lib.utils import RawStr, render
 
 # fmt: off
 
-@component
-def comment(children, safe=False):
-    """Create a comment from the children.
+class IEStyle:
+    """Set the style of the conditional comment.
 
-    The ``safe`` keyword will escape all end sequences (even from raw data).
+    The flag must be the first argument to ``comment``, see examples below.
+
+    ``IEStyle.HIDDEN`` (default)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    Comment to all browsers except IE<10 (default).
+
+        >>> render(comment (IEStyle.HIDDEN, ie="IE 9") [p])
+        '<!--[if IE 9]><p></p><![endif]-->'
+
+    ``IEStyle.REVEALED``
+    ~~~~~~~~~~~~~~~~~~~~
+    Comment to IE<10 browsers, invalid markup to others.
+
+        >>> render(comment (IEStyle.REVEALED, ie="IE 9") [p])
+        '<![if IE 9]><p></p><![endif]>'
+
+    ``IEStyle.NEVER_IE``
+    ~~~~~~~~~~~~~~~~~~~~
+    Always a comment to IE<10, not a comment to other browsers.
+
+        >>> render(comment (IEStyle.NEVER_IE, ie="!IE") [p])
+        '<!--[if !IE]><!--><p></p><!--<![endif]-->'
     """
-    rendered = render(children)
-    content = rendered if not safe else rendered.replace('-->', '--&gt;')
-    return RawStr(f"<!-- {content} -->")
+
+    HIDDEN = {"template": ("<!--[if {expr}]>", "<![endif]-->")}
+
+    REVEALED = {"template": ("<![if {expr}]>", "<![endif]>")}
+
+    NEVER_IE = {"template": ("<!--[if {expr}]><!-->", "<!--<![endif]-->")}
+
+@component
+def comment(children, safe=False, ie=None, template=IEStyle.HIDDEN["template"]):
+    """Create a comment.
+
+    Setting ``safe=True`` will escape all end sequences, even from raw data.
+
+    ``ie`` should be either ``False`` or an IE expression (such as ``IE 6``)
+    to create a conditional comment.
+
+    See the ``IEStyle`` enum to set the style of the conditional comment.
+
+        >>> comment (ie="IE 6") [
+        ...     p ["Only visible in IE 6"]
+        ... ]
+    """
+    if ie is not None:
+        opening = template[0].format(expr=ie)
+        closing = template[1]
+        return RawStr(opening), children, RawStr(closing)
+
+    content = children if not safe else render(children).replace('-->', '--&gt;')
+    return RawStr(f"<!-- "), content, RawStr(" -->")
 
 
 @component
